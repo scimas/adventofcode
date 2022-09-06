@@ -1,0 +1,11 @@
+[package]
+name = "adventofcode2020"
+version = "0.1.0"
+authors = ["Mihir Gadgil <16473290+scimas@users.noreply.github.com>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+regex = "1.4"
+parsing = { git = "https://github.com/scimas/parsing" }
