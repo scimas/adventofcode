@@ -18,7 +18,7 @@ struct Vec2 {
 }
 
 impl Vec2 {
-    fn new(x: i64, y: i64) -> Self {
+    const fn new(x: i64, y: i64) -> Self {
         Self { x, y }
     }
 }
@@ -45,7 +45,7 @@ struct Component2<'a> {
 }
 
 impl<'a> Component2<'a> {
-    fn new(v: &'a Vec2) -> Self {
+    const fn new(v: &'a Vec2) -> Self {
         Self { v, idx: 0 }
     }
 }
@@ -90,11 +90,11 @@ impl<'a> L1Norm<'a> for Vec2 {
     }
 }
 
-fn rotate_left(v: Vec2) -> Vec2 {
+const fn rotate_left(v: Vec2) -> Vec2 {
     Vec2::new(-v.y, v.x)
 }
 
-fn rotate_right(v: Vec2) -> Vec2 {
+const fn rotate_right(v: Vec2) -> Vec2 {
     Vec2::new(v.y, -v.x)
 }
 

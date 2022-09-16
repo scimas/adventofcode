@@ -10,7 +10,7 @@ struct Ip {
 }
 
 impl Ip {
-    fn new(supernet_sequences: Vec<String>, hypernet_sequences: Vec<String>) -> Self {
+    const fn new(supernet_sequences: Vec<String>, hypernet_sequences: Vec<String>) -> Self {
         Self {
             supernet_sequences,
             hypernet_sequences,

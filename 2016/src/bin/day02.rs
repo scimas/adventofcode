@@ -4,7 +4,7 @@ use std::{fs::File, io::{BufRead, BufReader}};
 struct Num(u8);
 
 impl Num {
-    fn left(&self) -> Num {
+    const fn left(&self) -> Num {
         match self.0 {
             1 => Num(1),
             2 => Num(1),
@@ -19,7 +19,7 @@ impl Num {
         }
     }
 
-    fn left2(&self) -> Num {
+    const fn left2(&self) -> Num {
         match self.0 {
             1 => Num(1),
             2 => Num(2),
@@ -38,7 +38,7 @@ impl Num {
         }
     }
 
-    fn right(&self) -> Num {
+    const fn right(&self) -> Num {
         match self.0 {
             1 => Num(2),
             2 => Num(3),
@@ -53,7 +53,7 @@ impl Num {
         }
     }
 
-    fn right2(&self) -> Num {
+    const fn right2(&self) -> Num {
         match self.0 {
             1 => Num(1),
             2 => Num(3),
@@ -72,7 +72,7 @@ impl Num {
         }
     }
 
-    fn up(&self) -> Num {
+    const fn up(&self) -> Num {
         match self.0 {
             1 => Num(1),
             2 => Num(2),
@@ -87,7 +87,7 @@ impl Num {
         }
     }
     
-    fn up2(&self) -> Num {
+    const fn up2(&self) -> Num {
         match self.0 {
             1 => Num(1),
             2 => Num(2),
@@ -106,7 +106,7 @@ impl Num {
         }
     }
 
-    fn down(&self) -> Num {
+    const fn down(&self) -> Num {
         match self.0 {
             1 => Num(4),
             2 => Num(5),
@@ -121,7 +121,7 @@ impl Num {
         }
     }
 
-    fn down2(&self) -> Num {
+    const fn down2(&self) -> Num {
         match self.0 {
             1 => Num(3),
             2 => Num(6),
