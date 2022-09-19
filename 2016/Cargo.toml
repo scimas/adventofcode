@@ -10,3 +10,4 @@ authors = ["Mihir Gadgil <mmgadgil20@gmail.com>"]
 base16ct = { version = "0.1.1", features = ["alloc"] }
 md-5 = "0.10.4"
 regex = "1.6.0"
+thiserror = "1.0.35"
