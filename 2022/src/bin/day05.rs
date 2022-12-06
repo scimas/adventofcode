@@ -71,7 +71,7 @@ fn part1(mut stacks: Vec<Stack>, moves: &[Move]) -> String {
     }
     stacks[1..]
         .iter()
-        .map(|stack| stack.last().unwrap_or_else(|| &' '))
+        .map(|stack| stack.last().unwrap_or(&' '))
         .collect()
 }
 
@@ -83,7 +83,7 @@ fn part2(mut stacks: Vec<Stack>, moves: &[Move]) -> String {
     }
     stacks[1..]
         .iter()
-        .map(|stack| stack.last().unwrap_or_else(|| &' '))
+        .map(|stack| stack.last().unwrap_or(&' '))
         .collect()
 }
 

@@ -43,7 +43,7 @@ fn parse_input(input: &str) -> Vec<Rucksack> {
 }
 
 fn priority(ch: char) -> u64 {
-    if ch >= 'a' && ch <= 'z' {
+    if ('a'..='z').contains(&ch) {
         u64::from(ch) - u64::from('a') + 1
     } else {
         u64::from(ch) - u64::from('A') + 27
@@ -78,11 +78,7 @@ fn find_badge(rucksacks: &[Rucksack]) -> char {
 }
 
 fn part2(rucksacks: &[Rucksack]) -> u64 {
-    rucksacks
-        .chunks(3)
-        .map(|group| find_badge(group))
-        .map(|badge| priority(badge))
-        .sum()
+    rucksacks.chunks(3).map(find_badge).map(priority).sum()
 }
 
 #[cfg(test)]

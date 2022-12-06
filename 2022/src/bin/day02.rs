@@ -47,16 +47,16 @@ fn parse_input_1(input: &str) -> Vec<(Shape, Shape)> {
 }
 
 fn is_win(round: &(Shape, Shape)) -> Outcome {
-    match round {
-        &(Shape::Rock, Shape::Paper) => Outcome::Win,
-        &(Shape::Rock, Shape::Scissor) => Outcome::Loss,
-        &(Shape::Paper, Shape::Rock) => Outcome::Loss,
-        &(Shape::Paper, Shape::Scissor) => Outcome::Win,
-        &(Shape::Scissor, Shape::Rock) => Outcome::Win,
-        &(Shape::Scissor, Shape::Paper) => Outcome::Loss,
-        &(Shape::Rock, Shape::Rock) => Outcome::Draw,
-        &(Shape::Paper, Shape::Paper) => Outcome::Draw,
-        &(Shape::Scissor, Shape::Scissor) => Outcome::Draw,
+    match *round {
+        (Shape::Rock, Shape::Paper) => Outcome::Win,
+        (Shape::Rock, Shape::Scissor) => Outcome::Loss,
+        (Shape::Paper, Shape::Rock) => Outcome::Loss,
+        (Shape::Paper, Shape::Scissor) => Outcome::Win,
+        (Shape::Scissor, Shape::Rock) => Outcome::Win,
+        (Shape::Scissor, Shape::Paper) => Outcome::Loss,
+        (Shape::Rock, Shape::Rock) => Outcome::Draw,
+        (Shape::Paper, Shape::Paper) => Outcome::Draw,
+        (Shape::Scissor, Shape::Scissor) => Outcome::Draw,
     }
 }
 
