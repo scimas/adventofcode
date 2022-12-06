@@ -41,7 +41,7 @@ fn part2(elves: &[Vec<u64>]) -> u64 {
 mod tests {
     use crate::{parse_input, part1, part2};
 
-    fn test_input_1() -> &'static str {
+    fn test_input_1() -> String {
         "1000
 2000
 3000
@@ -55,7 +55,9 @@ mod tests {
 8000
 9000
 
-10000"
+10000
+"
+        .to_string()
     }
 
     #[test]
@@ -68,7 +70,7 @@ mod tests {
             vec![7000, 8000, 9000],
             vec![10000],
         ];
-        match parse_input(input) {
+        match parse_input(&input) {
             Ok(elves) => assert_eq!(elves, expected),
             Err(e) => panic!("couldn't parse input as u64 {e}"),
         };
@@ -77,14 +79,14 @@ mod tests {
     #[test]
     fn part1_test_1() {
         let input = test_input_1();
-        let elves = parse_input(input).unwrap();
+        let elves = parse_input(&input).unwrap();
         assert_eq!(part1(&elves), Some(24000));
     }
 
     #[test]
     fn part2_test_1() {
         let input = test_input_1();
-        let elves = parse_input(input).unwrap();
+        let elves = parse_input(&input).unwrap();
         assert_eq!(part2(&elves), 45000);
     }
 }
