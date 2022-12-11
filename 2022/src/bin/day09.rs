@@ -47,30 +47,23 @@ fn execute_moves(moves: &[Point], knots: usize) -> HashSet<Point> {
     let mut t_positions = HashSet::new();
     for m in moves {
         match m {
-            (x, 0) => {
-                for _ in 0..x.abs() {
-                    knot_positions[0] = add(knot_positions[0], (x.signum(), 0));
-                    for i in 1..knots {
-                        knot_positions[i] =
-                            adjust_knot_pair(knot_positions[i - 1], knot_positions[i]);
-                    }
+            (x, y) if x == &0 || y == &0 => {
+                for _ in 0..x.abs().max(y.abs()) {
+                    execute_move(&mut knot_positions, (x.signum(), y.signum()));
                     t_positions.insert(knot_positions[knots - 1]);
                 }
             }
-            (0, y) => {
-                for _ in 0..y.abs() {
-                    knot_positions[0] = add(knot_positions[0], (0, y.signum()));
-                    for i in 1..knots {
-                        knot_positions[i] =
-                            adjust_knot_pair(knot_positions[i - 1], knot_positions[i]);
-                    }
-                    t_positions.insert(knot_positions[knots - 1]);
-                }
-            }
-            _ => unreachable!("move should not be in any other pattern"),
+            _ => panic!("move should not be in any other pattern"),
         }
     }
     t_positions
+}
+
+fn execute_move(knots: &mut [Point], m: Point) {
+    knots[0] = add(knots[0], m);
+    for i in 1..knots.len() {
+        knots[i] = adjust_knot_pair(knots[i - 1], knots[i]);
+    }
 }
 
 fn adjust_knot_pair(head_position: Point, tail_position: Point) -> Point {
