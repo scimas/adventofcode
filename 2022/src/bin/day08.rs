@@ -61,30 +61,30 @@ impl Forest {
             self.row(row)
                 .take(column)
                 .fold(0, |count, h| if h < &tree_height { count + 1 } else { 1 });
-        let mut right_score = 0;
-        self.row(row).skip(column + 1).try_for_each(|h| {
+        let right_score = match self.row(row).skip(column + 1).try_fold(0, |count, h| {
             if h < &tree_height {
-                right_score += 1;
-                ControlFlow::Continue(())
+                ControlFlow::Continue(count + 1)
             } else {
-                right_score += 1;
-                ControlFlow::Break(())
+                ControlFlow::Break(count + 1)
             }
-        });
+        }) {
+            ControlFlow::Continue(count) => count,
+            ControlFlow::Break(count) => count,
+        };
         let up_score =
             self.column(column)
                 .take(row)
                 .fold(0, |count, h| if h < &tree_height { count + 1 } else { 1 });
-        let mut down_score = 0;
-        self.column(column).skip(row + 1).try_for_each(|h| {
+        let down_score = match self.column(column).skip(row + 1).try_fold(0, |count, h| {
             if h < &tree_height {
-                down_score += 1;
-                ControlFlow::Continue(())
+                ControlFlow::Continue(count + 1)
             } else {
-                down_score += 1;
-                ControlFlow::Break(())
+                ControlFlow::Break(count + 1)
             }
-        });
+        }) {
+            ControlFlow::Continue(count) => count,
+            ControlFlow::Break(count) => count,
+        };
         left_score * right_score * up_score * down_score
     }
 }
