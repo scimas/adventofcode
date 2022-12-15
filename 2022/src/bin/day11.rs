@@ -1,10 +1,20 @@
-use std::collections::{HashMap, VecDeque};
+use std::{collections::VecDeque, fs::File, io::Read};
 
 fn main() -> Result<(), anyhow::Error> {
-    todo!()
+    let mut fl = File::open("resources/input11")?;
+    let mut input = String::new();
+    fl.read_to_string(&mut input)?;
+    let (mut monkeys, mut communicators) = parse_input(&input);
+    println!("Day 11");
+    println!(
+        "Part 1: {}",
+        part1(&mut monkeys.clone(), &mut communicators.clone())
+    );
+    println!("Part 2: {}", part2(&mut monkeys, &mut communicators));
+    Ok(())
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 struct Monkey {
     worry_levels: VecDeque<u64>,
     operation: Operation,
@@ -107,6 +117,10 @@ impl Monkey {
         self.worry_levels.extend(queue);
     }
 
+    fn has_items(&self) -> bool {
+        !self.worry_levels.is_empty()
+    }
+
     fn inspect(&mut self) {
         if let Some(level) = self.worry_levels.front_mut() {
             match self.operation {
@@ -133,20 +147,31 @@ impl Monkey {
                     *level = op1 * op2;
                 }
             }
+        }
+    }
+
+    fn relieve_worry(&mut self) {
+        if let Some(level) = self.worry_levels.front_mut() {
             *level /= 3;
         }
     }
 
-    fn test_worry(&mut self, communicators: &mut HashMap<usize, Vec<u64>>) {
+    fn manage_worry(&mut self, base: u64) {
+        if let Some(level) = self.worry_levels.front_mut() {
+            *level %= base;
+        }
+    }
+
+    fn test_worry(&mut self, communicators: &mut [Vec<u64>]) {
         if let Some(level) = self.worry_levels.pop_front() {
             if level % self.test.div == 0 {
                 communicators
-                    .get_mut(&self.test.true_dest)
+                    .get_mut(self.test.true_dest)
                     .unwrap()
                     .push(level);
             } else {
                 communicators
-                    .get_mut(&self.test.false_dest)
+                    .get_mut(self.test.false_dest)
                     .unwrap()
                     .push(level);
             }
@@ -171,24 +196,88 @@ where
     }
 }
 
-fn parse_input(input: &str) -> (HashMap<usize, Monkey>, HashMap<usize, Vec<u64>>) {
-    let monkeys: HashMap<usize, Monkey> =
-        input.trim_end().split("\n\n").map(parse_monkey).collect();
-    let communicators = (0..monkeys.len()).map(|idx| (idx, Vec::new())).collect();
+fn parse_input(input: &str) -> (Vec<Monkey>, Vec<Vec<u64>>) {
+    let monkeys: Vec<Monkey> = input.trim_end().split("\n\n").map(parse_monkey).collect();
+    let communicators = vec![vec![]; monkeys.len()];
     (monkeys, communicators)
 }
 
-fn parse_monkey(monkey_str: &str) -> (usize, Monkey) {
-    let (monkey_num_str, rest) = monkey_str.split_once('\n').unwrap();
-    let monkey_num = monkey_num_str[7..monkey_num_str.len() - 1].parse().unwrap();
-    (monkey_num, Monkey::from(rest))
+fn parse_monkey(monkey_str: &str) -> Monkey {
+    let (_, rest) = monkey_str.split_once('\n').unwrap();
+    Monkey::from(rest)
+}
+
+fn inspections_with_relief(
+    monkeys: &mut [Monkey],
+    communicators: &mut [Vec<u64>],
+    rounds: usize,
+) -> Vec<usize> {
+    let mut counts = Vec::new();
+    for _ in 0..rounds {
+        for i in 0..monkeys.len() {
+            monkeys[i].receive(communicators[i].iter());
+            communicators[i].clear();
+            while monkeys[i].has_items() {
+                monkeys[i].inspect();
+                if let Some(c) = counts.get_mut(i) {
+                    *c += 1;
+                } else {
+                    counts.push(1);
+                }
+                monkeys[i].relieve_worry();
+                monkeys[i].test_worry(communicators);
+            }
+        }
+    }
+    counts
+}
+
+fn part1(monkeys: &mut [Monkey], communicators: &mut [Vec<u64>]) -> usize {
+    let mut inspection_counts = inspections_with_relief(monkeys, communicators, 20);
+    inspection_counts.sort_unstable();
+    inspection_counts[inspection_counts.len() - 1] * inspection_counts[inspection_counts.len() - 2]
+}
+
+fn inspections_without_relief(
+    monkeys: &mut [Monkey],
+    communicators: &mut [Vec<u64>],
+    rounds: usize,
+) -> Vec<usize> {
+    let base: u64 = monkeys.iter().map(|m| m.test.div).product();
+    let mut counts = Vec::new();
+    for _ in 0..rounds {
+        for i in 0..monkeys.len() {
+            monkeys[i].receive(communicators[i].iter());
+            communicators[i].clear();
+            while monkeys[i].has_items() {
+                monkeys[i].inspect();
+                if let Some(c) = counts.get_mut(i) {
+                    *c += 1;
+                } else {
+                    counts.push(1);
+                }
+                monkeys[i].manage_worry(base);
+                monkeys[i].test_worry(communicators);
+            }
+        }
+    }
+    counts
+}
+
+fn part2(monkeys: &mut [Monkey], communicators: &mut [Vec<u64>]) -> usize {
+    let mut inspection_counts = inspections_without_relief(monkeys, communicators, 10_000);
+    inspection_counts.sort_unstable();
+    inspection_counts[inspection_counts.len() - 1] * inspection_counts[inspection_counts.len() - 2]
 }
 
 #[cfg(test)]
 mod tests {
-    use std::collections::{HashMap, VecDeque};
+    use std::collections::VecDeque;
 
-    use crate::{parse_input, Monkey, Operand, Operation, Test};
+    use crate::{
+        inspections_with_relief, inspections_without_relief, parse_input, part1, part2, Monkey,
+        Operand, Operation, Test,
+    };
 
     fn test_input_1() -> String {
         "Monkey 0:
@@ -225,40 +314,64 @@ Monkey 3:
     #[test]
     fn parse_test() {
         let input = test_input_1();
-        let expected = HashMap::from([
-            (
-                0,
-                Monkey::new(
-                    VecDeque::from([79, 98]),
-                    Operation::Mult(Operand::Old, Operand::Number(19)),
-                    Test::new(23, 2, 3),
-                ),
+        let expected = vec![
+            Monkey::new(
+                VecDeque::from([79, 98]),
+                Operation::Mult(Operand::Old, Operand::Number(19)),
+                Test::new(23, 2, 3),
             ),
-            (
-                1,
-                Monkey::new(
-                    VecDeque::from([54, 65, 75, 74]),
-                    Operation::Add(Operand::Old, Operand::Number(6)),
-                    Test::new(19, 2, 0),
-                ),
+            Monkey::new(
+                VecDeque::from([54, 65, 75, 74]),
+                Operation::Add(Operand::Old, Operand::Number(6)),
+                Test::new(19, 2, 0),
             ),
-            (
-                2,
-                Monkey::new(
-                    VecDeque::from([79, 60, 97]),
-                    Operation::Mult(Operand::Old, Operand::Old),
-                    Test::new(13, 1, 3),
-                ),
+            Monkey::new(
+                VecDeque::from([79, 60, 97]),
+                Operation::Mult(Operand::Old, Operand::Old),
+                Test::new(13, 1, 3),
             ),
-            (
-                3,
-                Monkey::new(
-                    VecDeque::from([74]),
-                    Operation::Add(Operand::Old, Operand::Number(3)),
-                    Test::new(17, 0, 1),
-                ),
+            Monkey::new(
+                VecDeque::from([74]),
+                Operation::Add(Operand::Old, Operand::Number(3)),
+                Test::new(17, 0, 1),
             ),
-        ]);
+        ];
         assert_eq!(parse_input(&input).0, expected);
+    }
+
+    #[test]
+    fn inspections_with_relief_test() {
+        let input = test_input_1();
+        let (mut monkeys, mut communicators) = parse_input(&input);
+        let expected = vec![101, 95, 7, 105];
+        assert_eq!(
+            inspections_with_relief(&mut monkeys, &mut communicators, 20),
+            expected
+        );
+    }
+
+    #[test]
+    fn part1_test_1() {
+        let input = test_input_1();
+        let (mut monkeys, mut communicators) = parse_input(&input);
+        assert_eq!(part1(&mut monkeys, &mut communicators), 10_605);
+    }
+
+    #[test]
+    fn inspections_without_relief_test() {
+        let input = test_input_1();
+        let (mut monkeys, mut communicators) = parse_input(&input);
+        let expected = vec![52_166, 47_830, 1_938, 52_013];
+        assert_eq!(
+            inspections_without_relief(&mut monkeys, &mut communicators, 10_000),
+            expected
+        );
+    }
+
+    #[test]
+    fn part2_test_1() {
+        let input = test_input_1();
+        let (mut monkeys, mut communicators) = parse_input(&input);
+        assert_eq!(part2(&mut monkeys, &mut communicators), 2713310158);
     }
 }
