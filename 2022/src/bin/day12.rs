@@ -1,7 +1,19 @@
-use std::collections::{HashMap, HashSet};
+use std::{
+    collections::{HashMap, HashSet, VecDeque},
+    fs::File,
+    io::Read,
+};
 
 fn main() -> Result<(), anyhow::Error> {
-    todo!()
+    let mut fl = File::open("resources/input12")?;
+    let mut input = String::new();
+    fl.read_to_string(&mut input)?;
+    let (h_map, start_position, end_position) = parse_input(&input);
+    let graph = create_graph(&h_map);
+    println!("Day 12");
+    println!("Part 1: {}", part1(&graph, start_position, end_position));
+    println!("Part 2: {}", part2(&graph, &h_map, end_position));
+    Ok(())
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
@@ -23,8 +35,6 @@ impl Position {
             Position::new(self.row, self.col + 1),
         ]
     }
-
-    // fn is_valid_neighbor(&self, other: &Self, rows: i64, columns: i64)
 }
 
 type Graph = HashMap<Position, HashSet<Position>>;
@@ -76,11 +86,54 @@ fn create_graph(height_map: &HeightMap) -> Graph {
     graph
 }
 
+fn level_order_traverse(
+    graph: &Graph,
+    start_position: Position,
+    end_position: Position,
+) -> Option<usize> {
+    let mut visited = HashSet::new();
+    let mut queue = VecDeque::from([(start_position, 0)]);
+    while !queue.is_empty() {
+        let (pos, depth) = queue.pop_front().unwrap();
+        visited.insert(pos);
+        if pos == end_position {
+            return Some(depth);
+        }
+        queue.extend(
+            graph[&pos]
+                .iter()
+                .filter(|neighbor| {
+                    if visited.contains(*neighbor) {
+                        false
+                    } else {
+                        visited.insert(**neighbor);
+                        true
+                    }
+                })
+                .map(|neighbor| (*neighbor, depth + 1)),
+        );
+    }
+    None
+}
+
+fn part1(graph: &Graph, start_position: Position, end_position: Position) -> usize {
+    level_order_traverse(graph, start_position, end_position).unwrap()
+}
+
+fn part2(graph: &Graph, height_map: &HeightMap, end_position: Position) -> usize {
+    height_map
+        .iter()
+        .filter(|(_, h)| **h == 0)
+        .filter_map(|(pos, _)| level_order_traverse(graph, *pos, end_position))
+        .min()
+        .unwrap()
+}
+
 #[cfg(test)]
 mod tests {
     use std::collections::{HashMap, HashSet};
 
-    use crate::{create_graph, parse_input, Position};
+    use crate::{create_graph, parse_input, part1, part2, Position};
 
     fn test_input_1() -> String {
         "Sabqponm
@@ -378,5 +431,21 @@ abdefghi
         for k in expected.keys() {
             assert_eq!(graph[k], expected[k], "failure for {k:?}");
         }
+    }
+
+    #[test]
+    fn part1_test_1() {
+        let input = test_input_1();
+        let (h_map, start_position, end_position) = parse_input(&input);
+        let graph = create_graph(&h_map);
+        assert_eq!(part1(&graph, start_position, end_position), 31);
+    }
+
+    #[test]
+    fn part2_test_2() {
+        let input = test_input_1();
+        let (h_map, _, end_position) = parse_input(&input);
+        let graph = create_graph(&h_map);
+        assert_eq!(part2(&graph, &h_map, end_position), 29);
     }
 }
