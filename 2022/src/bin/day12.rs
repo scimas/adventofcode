@@ -4,6 +4,8 @@ use std::{
     io::Read,
 };
 
+use adventofcode_2022::Position;
+
 fn main() -> Result<(), anyhow::Error> {
     let mut fl = File::open("resources/input12")?;
     let mut input = String::new();
@@ -14,27 +16,6 @@ fn main() -> Result<(), anyhow::Error> {
     println!("Part 1: {}", part1(&graph, start_position, end_position));
     println!("Part 2: {}", part2(&graph, &h_map, end_position));
     Ok(())
-}
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-struct Position {
-    row: i64,
-    col: i64,
-}
-
-impl Position {
-    fn new(row: i64, col: i64) -> Self {
-        Position { row, col }
-    }
-
-    fn neighbors(&self) -> Vec<Self> {
-        vec![
-            Position::new(self.row - 1, self.col),
-            Position::new(self.row + 1, self.col),
-            Position::new(self.row, self.col - 1),
-            Position::new(self.row, self.col + 1),
-        ]
-    }
 }
 
 type Graph = HashMap<Position, HashSet<Position>>;
