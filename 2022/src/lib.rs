@@ -1,7 +1,7 @@
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Position {
-    row: i64,
-    col: i64,
+    pub row: i64,
+    pub col: i64,
 }
 
 impl Position {
