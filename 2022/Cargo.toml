@@ -7,7 +7,9 @@ edition = "2021"
 
 [dependencies]
 anyhow = "1.0.66"
+rayon = "1.7.0"
 regex = "1.7.0"
-serde = { version = "1.0.151", features = ["derive"] }
+# https://github.com/serde-rs/serde/issues/2538
+serde = { version = ">= 1.0, <= 1.0.171", features = ["derive"] }
 serde_json = "1.0.90"
 thiserror = "1.0.37"

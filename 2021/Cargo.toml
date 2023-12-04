@@ -1,2 +1,8 @@
-[workspace]
-members = ["day01", "day02", "day03", "day04", "day05", "day06", "day07", "day08", "day09", "day10", "day11"]
+[package]
+name = "advent-of-code-2021"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
