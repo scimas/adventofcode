@@ -2,6 +2,8 @@ use std::collections::HashSet;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+fn main() {}
+
 type ComputerOp = fn(i32, &mut i32) -> i32;
 
 fn acc(inp: i32, accumulator: &mut i32) -> i32 {

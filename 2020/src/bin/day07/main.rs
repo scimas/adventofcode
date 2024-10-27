@@ -2,6 +2,8 @@ use std::collections::HashSet;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+fn main() {}
+
 #[derive(Debug, PartialEq, Eq, Hash)]
 struct Bag(String, String);
 

@@ -2,6 +2,8 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+fn main() {}
+
 fn load_data() -> Vec<Vec<u8>> {
     let f = File::open("res/input17.txt").expect("Couldn't open day 17 input");
     let reader = BufReader::new(f);

@@ -3,6 +3,8 @@ use std::io::{BufRead, BufReader};
 use std::ops::Add;
 use std::ops::Mul;
 
+fn main() {}
+
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 struct Vector<T: Add + Copy> {
     x: T,

@@ -2,6 +2,8 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::ops::Add;
 
+fn main() {}
+
 fn load_data() -> Vec<u64> {
     let f = File::open("res/input09.txt").expect("Couldn't open input for day 9");
     let reader = BufReader::new(f);

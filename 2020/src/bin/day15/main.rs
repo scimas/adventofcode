@@ -1,6 +1,8 @@
 use std::collections::HashMap;
 use std::fs::read_to_string;
 
+fn main() {}
+
 fn str_to_map(s: &str) -> HashMap<usize, usize> {
     s.trim()
         .split(',')

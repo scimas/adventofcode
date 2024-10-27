@@ -65,35 +65,26 @@ fn part2(input: &str) -> u32 {
                         let four_range = i..(i + 4).min(line.len());
                         let five_range = i..(i + 5).min(line.len());
                         i += 1;
-                        match DIGITS_THREE
+                        if let Some(digit) = DIGITS_THREE
                             .iter()
                             .find(|s| s == &&&line[three_range.clone()])
                         {
-                            Some(digit) => {
-                                digits.push(digit_map[digit]);
-                                continue;
-                            }
-                            None => (),
+                            digits.push(digit_map[digit]);
+                            continue;
                         }
-                        match DIGITS_FOUR
+                        if let Some(digit) = DIGITS_FOUR
                             .iter()
                             .find(|s| s == &&&line[four_range.clone()])
                         {
-                            Some(digit) => {
-                                digits.push(digit_map[digit]);
-                                continue;
-                            }
-                            None => (),
+                            digits.push(digit_map[digit]);
+                            continue;
                         }
-                        match DIGITS_FIVE
+                        if let Some(digit) = DIGITS_FIVE
                             .iter()
                             .find(|s| s == &&&line[five_range.clone()])
                         {
-                            Some(digit) => {
-                                digits.push(digit_map[digit]);
-                                continue;
-                            }
-                            None => (),
+                            digits.push(digit_map[digit]);
+                            continue;
                         }
                     }
                 }

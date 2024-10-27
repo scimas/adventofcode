@@ -2,6 +2,8 @@ use std::collections::HashMap;
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+fn main() {}
+
 fn load_joltages() -> Vec<u32> {
     let f = File::open("res/input10.txt").expect("Couldn't open input for day 10");
     let reader = BufReader::new(f);

@@ -1,6 +1,8 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+fn main() {}
+
 fn string_to_seat(s: &str) -> (usize, usize, usize) {
     let mut row: usize = 0;
     let mut column: usize = 0;

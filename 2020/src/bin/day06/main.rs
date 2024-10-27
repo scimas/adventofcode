@@ -1,6 +1,8 @@
 use std::collections::HashSet;
 use std::fs;
 
+fn main() {}
+
 fn load_data() -> Vec<Vec<HashSet<char>>> {
     let answer_list = fs::read_to_string("res/input06.txt").expect("Couldn't read day 6 input");
     let mut groups: Vec<Vec<HashSet<char>>> = Vec::new();

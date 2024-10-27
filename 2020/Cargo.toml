@@ -9,3 +9,5 @@ edition = "2018"
 [dependencies]
 regex = "1.4"
 parsing = { git = "https://github.com/scimas/parsing" }
+tracing = "0.1.40"
+tracing-subscriber = "0.3.18"

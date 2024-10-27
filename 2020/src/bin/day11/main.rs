@@ -1,6 +1,8 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+fn main() {}
+
 fn load_seats() -> Vec<Vec<i32>> {
     let f = File::open("res/input11.txt").expect("Couldn't open day 11 input");
     let reader = BufReader::new(f);

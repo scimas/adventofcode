@@ -2,6 +2,8 @@ use std::fs::File;
 use std::io::{BufRead, BufReader};
 use std::str::FromStr;
 
+fn main() {}
+
 struct Policy {
     min: usize,
     max: usize,

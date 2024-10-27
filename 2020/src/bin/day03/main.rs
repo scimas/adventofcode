@@ -1,6 +1,8 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+fn main() {}
+
 fn load_data() -> Vec<Vec<bool>> {
     let f = File::open("res/input03.txt").expect("Couldn't read day 3 input");
     let reader = BufReader::new(f);

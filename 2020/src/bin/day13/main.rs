@@ -1,6 +1,8 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+fn main() {}
+
 fn load_data() -> (u64, Vec<u64>) {
     let f = File::open("res/input13.txt").expect("Couldn't open day 13 input");
     let mut reader = BufReader::new(f);

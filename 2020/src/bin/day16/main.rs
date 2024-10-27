@@ -7,6 +7,8 @@ use std::{
     str::FromStr,
 };
 
+fn main() {}
+
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 struct Rule<T: PartialOrd> {
     name: String,

@@ -5,6 +5,8 @@ use parsing::{
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+fn main() {}
+
 fn load_expressions() -> Vec<String> {
     let f = File::open("res/input18.txt").expect("Couldn't open day 18 input");
     let reader = BufReader::new(f);

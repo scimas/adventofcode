@@ -1,5 +1,7 @@
 use std::fs;
 
+fn main() {}
+
 // struct Passport {
 //     byr: String,
 //     iyr: String,

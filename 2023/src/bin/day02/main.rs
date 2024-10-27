@@ -105,7 +105,7 @@ fn part1(games: &[Vec<HashMap<Color, u8>>]) -> u32 {
     let available_cubes =
         HashMap::from([(Color::Red, 12u8), (Color::Green, 13), (Color::Blue, 14)]);
     let mut sum = 0;
-    for (idx, game) in games.into_iter().enumerate() {
+    for (idx, game) in games.iter().enumerate() {
         let required = game_required_cubes(game);
         if required
             .iter()
@@ -119,7 +119,7 @@ fn part1(games: &[Vec<HashMap<Color, u8>>]) -> u32 {
 
 fn part2(games: &[Vec<HashMap<Color, u8>>]) -> u32 {
     games
-        .into_iter()
+        .iter()
         .map(|game| game_required_cubes(game))
         .map(|required| required.into_values().map(u32::from).product::<u32>())
         .sum()

@@ -1,6 +1,8 @@
 use std::fs::File;
 use std::io::{BufRead, BufReader};
 
+fn main() {}
+
 fn pair_match(inp: &[u32], sum: u32) -> Option<(u32, u32)> {
     let nums = inp.len();
     for i in 0..nums {
